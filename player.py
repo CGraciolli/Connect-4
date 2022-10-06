@@ -3,6 +3,7 @@ from oracle import BaseOracle, ColumnClassification
 from settings import BOARD_SIZE
 from random import choice
 from move import Move
+from collections import deque
 
 class Player:
     def __init__(self, name, char = None, oracle = BaseOracle(), opponent = None):
@@ -10,7 +11,7 @@ class Player:
         self.char = char
         self.oracle = oracle
         self._opponent = opponent
-        self.last_move = None
+        self.last_move = deque([])
     
     @property
     def opponent(self):
@@ -46,7 +47,7 @@ class Player:
         board.add(index, self.char)
         board_code = board.as_code()
         rec = self.oracle.get_recommendation(board, self.char)
-        self.last_move = Move(index, board_code, rec, self)
+        self.last_move.appendleft(Move(index, board_code, rec, self))
         return board
     
     def ask_oracle(self, board):
@@ -110,6 +111,6 @@ class HumanPlayer(Player):
 class ReportingPlayer(Player):
 
     def on_lose(self):
-        board_code = self.last_move.board_code
-        position = self.last_move.position
+        board_code = self.last_move[0].board_code
+        position = self.last_move[0].position
         self.oracle.update_to_bad(board_code, self, position)

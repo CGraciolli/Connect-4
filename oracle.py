@@ -77,7 +77,7 @@ class SmartOracle(BaseOracle):
                 table.columns.append(["win"], header=str(index))
         print(table)
     
-    def no_good_options(self, board, player):
+    def no_good_options2(self, board, player):
         ##True if for every move, there is a possible move for the opponent such that every following move is a losing (BAD) move
         answer = True
         for index in range(BOARD_SIZE):
@@ -93,7 +93,12 @@ class SmartOracle(BaseOracle):
             bad_move = bad_move and good_move ##playing at index is a bad move if every possibe move for the opponent is a good move
             answer = answer and bad_move ##there are no good option if all possible moves are bad moves
         return answer
-        
+
+    def no_good_options(self, board, player):
+        rec = self.get_recommendation(board, player.char)
+        rec = list(filter(lambda x : x.classification != ColumnClassification.BAD and x.classification != ColumnClassification.FULL, rec))
+        return rec == []
+
 class MemoizingOracle(SmartOracle):
     """
     get_recommendation is memoized
