@@ -54,6 +54,12 @@ class SquareBoard:
         b = cls.from_list(matrix)
         return b
 
+    @classmethod
+    def from_raw_code(cls, raw_code):
+        matrix = explode_to_matrix(raw_code)
+        b = cls.from_list(matrix)
+        return b
+
     def as_matrix(self):
         matrix = []
         for column in self.columns:

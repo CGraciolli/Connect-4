@@ -1,3 +1,4 @@
+from copy import deepcopy
 from enum import Enum
 from square_board import SquareBoard
 from settings import BOARD_SIZE
@@ -77,8 +78,21 @@ class SmartOracle(BaseOracle):
         print(table)
     
     def no_good_options(self, board, player):
-        pass
-
+        ##True if for every move, there is a possible move for the opponent such that every following move is a losing (BAD) move
+        answer = True
+        for index in range(BOARD_SIZE):
+            temp = deepcopy(board)
+            temp.add(index, player.char)
+            bad_move = True
+            for j in range(BOARD_SIZE):
+                temp_j = deepcopy(temp)
+                temp_j.add(j, player.opponent.char)
+                good_move = True ##the opponent playing in the position j is a good move (for them), if after there are only losing moves for our player
+                for k in range(BOARD_SIZE):
+                    good_move = good_move and temp_j.is_losing_move(k, player.char)
+            bad_move = bad_move and good_move ##playing at index is a bad move if every possibe move for the opponent is a good move
+            answer = answer and bad_move ##there are no good option if all possible moves are bad moves
+            
 class MemoizingOracle(SmartOracle):
     """
     get_recommendation is memoized
