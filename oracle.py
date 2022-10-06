@@ -92,7 +92,8 @@ class SmartOracle(BaseOracle):
                     good_move = good_move and temp_j.is_losing_move(k, player.char)
             bad_move = bad_move and good_move ##playing at index is a bad move if every possibe move for the opponent is a good move
             answer = answer and bad_move ##there are no good option if all possible moves are bad moves
-            
+        return answer
+        
 class MemoizingOracle(SmartOracle):
     """
     get_recommendation is memoized
