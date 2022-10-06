@@ -11,7 +11,7 @@ class Player:
         self.char = char
         self.oracle = oracle
         self._opponent = opponent
-        self.last_move = deque([])
+        self.moves = deque([])
     
     @property
     def opponent(self):
@@ -47,7 +47,7 @@ class Player:
         board.add(index, self.char)
         board_code = board.as_code()
         rec = self.oracle.get_recommendation(board, self.char)
-        self.last_move.appendleft(Move(index, board_code, rec, self))
+        self.moves.appendleft(Move(index, board_code, rec, self))
         return board
     
     def ask_oracle(self, board):
@@ -111,6 +111,7 @@ class HumanPlayer(Player):
 class ReportingPlayer(Player):
 
     def on_lose(self):
-        board_code = self.last_move[0].board_code
-        position = self.last_move[0].position
-        self.oracle.update_to_bad(board_code, self, position)
+        """
+        tells the oracle to check its recommendations
+        """
+        self.oracle.backtrack(self.moves, self)

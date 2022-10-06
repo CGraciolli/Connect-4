@@ -96,7 +96,7 @@ class Game:
                 go_on = False
     
     def display_move(self, player):
-        print(player.name, "placed a piece in column", player.last_move[0].position)
+        print(player.name, "placed a piece in column", player.moves[0].position)
 
     def display_board(self):
         matrix = self.board.as_matrix()
@@ -116,6 +116,8 @@ class Game:
     def display_result(self):
         winner = self.match.get_winner(self.board)
         if winner:
+            winner.on_win()
+            winner.opponent.on_lose()
             print(winner.name, "won!")
         else:
             print("The match ended in a tie.")
