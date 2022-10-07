@@ -91,7 +91,7 @@ class SmartOracle(BaseOracle):
             elif r == ColumnClassification.WIN:
                 table.columns.append(["win"], header=str(index))
             elif r == ColumnClassification.REALLY_BAD:
-                table.columns.append(["really bad"], header=str(index))
+                table.columns.append(["lose"], header=str(index))
         print(table)
     
     def no_good_options(self, board, player):

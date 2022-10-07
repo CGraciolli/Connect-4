@@ -1,9 +1,10 @@
 from oracle import MemoizingOracle
 from oracle import BaseOracle, ColumnClassification
-from settings import BOARD_SIZE
+from settings import BOARD_SIZE, DEBUG
 from random import choice
 from move import Move
 from collections import deque
+from beautifultable import BeautifulTable
 
 class Player:
     def __init__(self, name, char = None, oracle = BaseOracle(), opponent = None):
@@ -50,11 +51,28 @@ class Player:
         self.moves.appendleft(Move(index, board_code, rec, self))
         return board
     
+    def display_recommendations(self, r):
+        table = BeautifulTable()
+        for index in range(BOARD_SIZE):
+            if r == ColumnClassification.FULL:
+                table.columns.append(["full"], header=str(index))
+            elif r == ColumnClassification.MAYBE:
+                table.columns.append(["maybe"], header=str(index))
+            elif r == ColumnClassification.BAD:
+                table.columns.append(["bad"], header=str(index))
+            elif r == ColumnClassification.WIN:
+                table.columns.append(["win"], header=str(index))
+            elif r == ColumnClassification.REALLY_BAD:
+                table.columns.append(["lose"], header=str(index))
+        print(table)
+
     def ask_oracle(self, board):
         """
         is given a board and asks the oracle for recommendations
         """
         recommendations = self.oracle.get_recommendation(board, self.char)
+        if DEBUG:
+            self.oracle.get_help(board, self.char)
         best = self.choose(recommendations)
         return best
     
