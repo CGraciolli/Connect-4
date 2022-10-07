@@ -45,6 +45,21 @@ class BaseOracle:
         if column.is_full():
             return ColumnRecommendation(index, ColumnClassification.FULL)
         return ColumnRecommendation(index, ColumnClassification.MAYBE)
+    
+    def backtrack(self, list_of_moves):
+        pass
+
+    def update_to_bad(self, move):
+        pass
+    
+    def get_help(self):
+        pass
+
+    def no_good_options(self, board, player):
+        pass
+
+    def make_key(self, board_code, char):
+        pass
 
 class SmartOracle(BaseOracle):
     
@@ -105,15 +120,26 @@ class MemoizingOracle(SmartOracle):
 
 class LearningOracle(MemoizingOracle):
     
-    def update_to_bad(self, board_code, player, position):
+    def update_to_bad(self, move):
         ##create key
-        key = self.make_key(board_code, player.char)
+        key = self.make_key(move.board_code, move.player.char)
         ##get wrong classification
-        board = SquareBoard.from_code(board_code)
-        rec = self.get_recommendation(board, player.char)
+        board = SquareBoard.from_code(move.board_code)
+        rec = self.get_recommendation(board, move.player.char)
         ##correct it
-        rec[position] = ColumnRecommendation(position, ColumnClassification.BAD)
+        rec[move.position] = ColumnRecommendation(move.position, ColumnClassification.BAD)
         self.past_rec[key] = rec
     
-    def backtrack(self, moves, player):
-        pass
+    def backtrack(self, list_of_moves):
+        """
+        reexamines all moves
+        if it finds one where all is lost,
+        the one beore that is updates to bad
+        """
+        print("Learning...")
+        for move in list_of_moves:
+            self.update_to_bad(move)
+            board = SquareBoard.from_code(move.board_code)
+            if not self.no_good_options(board, move.player):
+                break
+        print("Size of knowledge base: ", len(self.past_rec))

@@ -114,4 +114,5 @@ class ReportingPlayer(Player):
         """
         tells the oracle to check its recommendations
         """
-        self.oracle.backtrack(self.moves, self)
+        self.oracle.backtrack(self.moves)
+        

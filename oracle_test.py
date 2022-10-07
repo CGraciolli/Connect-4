@@ -2,7 +2,7 @@ import pytest
 from oracle import *
 from square_board import SquareBoard, BoardCode
 from player import Player
-from list_tools import explode_to_matrix
+from move import Move
 
 def test_base_oracle():
     board = SquareBoard.from_list([["x", "o", "o", "x"],
@@ -23,7 +23,8 @@ def test_update_to_bad():
     board_code = BoardCode(board)
     o = LearningOracle()
     jaco = Player("Jaco", "x", oracle=o)
-    o.update_to_bad(board_code, jaco, 0)
+    m = Move(0, board_code, None, jaco)
+    o.update_to_bad(m)
 
     assert o.get_recommendation(board, jaco.char)[0] == ColumnRecommendation(0, ColumnClassification.BAD)
 

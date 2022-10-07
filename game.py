@@ -1,7 +1,7 @@
 from pyfiglet import Figlet
 from enum import Enum, auto
 from match import Match
-from player import HumanPlayer, ReportingPlayer
+from player import HumanPlayer, ReportingPlayer, Player
 from square_board import SquareBoard
 from list_tools import invert_matrix
 from beautifultable import BeautifulTable
@@ -67,7 +67,7 @@ class Game:
 
     def make_match(self):
         if self.difficulty_level == DifficultyLevel.EASY:
-            player1 = ReportingPlayer("Jaco")
+            player1 = Player("Jaco")
         elif self.difficulty_level == DifficultyLevel.MEDIUM:
             player1 = ReportingPlayer("Jaco", oracle = MemoizingOracle())
         elif self.difficulty_level == DifficultyLevel.HARD:
@@ -110,14 +110,16 @@ class Game:
     
     def is_game_over(self):
         if self.board.is_victory("x") or self.board.is_victory("o") or self.board.is_tie("x", "o"):
+            winner = self.match.get_winner(self.board)
+            if winner != None:
+                winner.on_win()
+                winner.opponent.on_lose()
             return True
         return False
 
     def display_result(self):
         winner = self.match.get_winner(self.board)
         if winner:
-            winner.on_win()
-            winner.opponent.on_lose()
             print(winner.name, "won!")
         else:
             print("The match ended in a tie.")
