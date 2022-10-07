@@ -1,6 +1,5 @@
-VICTORY_STRIKE = 3
-BOARD_SIZE = 4
-
+VICTORY_STRIKE = 4
+BOARD_SIZE = 5
 DEBUG = True
 
 ##em python, as constantes costumam ir em maiuscula
