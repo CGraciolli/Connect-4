@@ -32,11 +32,11 @@ def test_is_game_over():
                                       ["o", None, None, None],
                                       ["x", None, None, None]])                         
 
-    assert empty.is_game_over() == False
-    assert g1.is_game_over() == False
-    assert g2.is_game_over() == True
-    assert g3.is_game_over() == True
-    assert g4.is_game_over() == True
+    assert empty.has_winner_or_is_a_tie() == False
+    assert g1.has_winner_or_is_a_tie() == False
+    assert g2.has_winner_or_is_a_tie() == True
+    assert g3.has_winner_or_is_a_tie() == True
+    assert g4.has_winner_or_is_a_tie() == True
 
 
 

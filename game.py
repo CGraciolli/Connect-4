@@ -91,9 +91,14 @@ class Game:
             ##prints board
             self.display_board()
             ##checks if the match is over
-            if self.is_game_over():
+            if self.has_winner_or_is_a_tie():
                 self.display_result()
-                go_on = False
+                is_it_over = self.match.is_match_over()
+                if not is_it_over:
+                    self.board = SquareBoard()
+                    self.display_board()
+                else:
+                    go_on = False
     
     def display_move(self, player):
         print(player.name, "placed a piece in column", player.moves[0].position)
@@ -108,7 +113,7 @@ class Game:
         print(bt)
 
     
-    def is_game_over(self):
+    def has_winner_or_is_a_tie(self):
         if self.board.is_victory("x") or self.board.is_victory("o") or self.board.is_tie("x", "o"):
             winner = self.match.get_winner(self.board)
             if winner != None:

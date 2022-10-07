@@ -26,3 +26,12 @@ class Match():
         if board.is_victory(self.player2.char):
             return self.player2
         return None
+    
+    def is_match_over(self):
+        answer = 0
+        while answer != "Y" and answer != "N":
+            answer = input("Do you want to play again? (Y/N)").upper()
+        if answer == "N":
+            return True
+        else:
+            return False
