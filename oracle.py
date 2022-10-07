@@ -1,4 +1,3 @@
-from copy import deepcopy
 from enum import Enum
 from square_board import SquareBoard
 from settings import BOARD_SIZE
@@ -8,6 +7,7 @@ from beautifultable import BeautifulTable
 ##auto: Instances are replaced with an appropriate value for Enum members. By default, the initial value starts at 1.
 class ColumnClassification(Enum):
     FULL = -1000
+    REALLY_BAD = -10
     BAD = 1
     MAYBE = 10
     WIN = 100
@@ -74,7 +74,7 @@ class SmartOracle(BaseOracle):
             if board.is_winning_move(index, char):
                 return ColumnRecommendation(index, ColumnClassification.WIN)
             elif board.is_losing_move(index, char):
-                return ColumnRecommendation(index, ColumnClassification.BAD)
+                return ColumnRecommendation(index, ColumnClassification.REALLY_BAD)
             else:
                 return ColumnRecommendation(index, ColumnClassification.MAYBE)
     
@@ -90,11 +90,13 @@ class SmartOracle(BaseOracle):
                 table.columns.append(["bad"], header=str(index))
             elif r == ColumnClassification.WIN:
                 table.columns.append(["win"], header=str(index))
+            elif r == ColumnClassification.REALLY_BAD:
+                table.columns.append(["really bad"], header=str(index))
         print(table)
     
     def no_good_options(self, board, player):
         rec = self.get_recommendation(board, player.char)
-        rec = list(filter(lambda x : x.classification != ColumnClassification.BAD and x.classification != ColumnClassification.FULL, rec))
+        rec = list(filter(lambda x : x.classification == ColumnClassification.MAYBE or x.classification == ColumnClassification.WIN, rec))
         return rec == []
 
 class MemoizingOracle(SmartOracle):

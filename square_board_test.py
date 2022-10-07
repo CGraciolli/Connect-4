@@ -108,7 +108,8 @@ def test_is_winning_move():
                                 ["o", None, None, None],
                                 [None, None, None, None],
                                 [None, None, None, None]])
-    
+    c = SquareBoard.from_raw_code("x...|oo..|o...|....")
+
     assert b.is_winning_move(0, "x") == True
     assert b.is_winning_move(0, "o") == False
     assert b.is_winning_move(1, "x") == False
@@ -116,6 +117,7 @@ def test_is_winning_move():
                                 ["o", None, None, None],
                                 [None, None, None, None],
                                 [None, None, None, None]])
+    assert c.is_winning_move(1, "o")
 
 def test_is_losing_move():
     b = SquareBoard.from_list([["x", "x", None, None],
