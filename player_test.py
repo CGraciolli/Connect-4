@@ -23,12 +23,10 @@ def test_is_within_range():
     assert is_within_range(b, -1) == False
 
 def test_is_column_not_full():
-    b = SquareBoard.from_list([["o", "x", "x", "o"],
-                               ["o", "x", None, None],
-                               ["x", None, None, None],
-                               [None, None, None, None]])
+    b = SquareBoard.from_raw_code("xoxox|x....|.....|.....|oo...")
     
     assert is_column_not_full(b, 0) == False
     assert is_column_not_full(b, 1) == True
     assert is_column_not_full(b, 2) == True
     assert is_column_not_full(b, 3) == True
+    assert is_column_not_full(b, 4) == True

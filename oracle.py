@@ -25,6 +25,9 @@ class ColumnRecommendation:
 
    def __hash__(self) -> int:
         return hash(self.index, self.classification)
+    
+   def __repr__(self):
+        return str(self.classification)
         
 class BaseOracle:
     """
@@ -52,8 +55,21 @@ class BaseOracle:
     def update_to_bad(self, move):
         pass
     
-    def get_help(self):
-        pass
+    def get_help(self, board, char):
+        table = BeautifulTable()
+        for index in range(BOARD_SIZE):
+            r = self.get_column_recommendation(board, index, char).classification
+            if r == ColumnClassification.FULL:
+                table.columns.append(["full"], header=str(index))
+            elif r == ColumnClassification.MAYBE:
+                table.columns.append(["maybe"], header=str(index))
+            elif r == ColumnClassification.BAD:
+                table.columns.append(["bad"], header=str(index))
+            elif r == ColumnClassification.WIN:
+                table.columns.append(["win"], header=str(index))
+            elif r == ColumnClassification.REALLY_BAD:
+                table.columns.append(["lose"], header=str(index))
+        print(table)
 
     def no_good_options(self, board, player):
         pass
@@ -78,21 +94,6 @@ class SmartOracle(BaseOracle):
             else:
                 return ColumnRecommendation(index, ColumnClassification.MAYBE)
     
-    def get_help(self, board, char):
-        table = BeautifulTable()
-        for index in range(BOARD_SIZE):
-            r = self.get_column_recommendation(board, index, char).classification
-            if r == ColumnClassification.FULL:
-                table.columns.append(["full"], header=str(index))
-            elif r == ColumnClassification.MAYBE:
-                table.columns.append(["maybe"], header=str(index))
-            elif r == ColumnClassification.BAD:
-                table.columns.append(["bad"], header=str(index))
-            elif r == ColumnClassification.WIN:
-                table.columns.append(["win"], header=str(index))
-            elif r == ColumnClassification.REALLY_BAD:
-                table.columns.append(["lose"], header=str(index))
-        print(table)
     
     def no_good_options(self, board, player):
         rec = self.get_recommendation(board, player.char)

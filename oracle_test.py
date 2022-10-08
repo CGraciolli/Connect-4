@@ -5,14 +5,13 @@ from player import Player
 from move import Move
 
 def test_base_oracle():
-    board = SquareBoard.from_list([["x", "o", "o", "x"],
-                                   [None, None, None, None],
-                                   [None, None, None, None],
-                                   ["o", None, None, None]])
+    board = SquareBoard.from_raw_code("xoxox|.....|.....|.....|x....") 
     expected = [ColumnRecommendation(0, ColumnClassification.FULL),
                 ColumnRecommendation(1, ColumnClassification.MAYBE),
                 ColumnRecommendation(2, ColumnClassification.MAYBE),
-                ColumnRecommendation(3, ColumnClassification.MAYBE)]
+                ColumnRecommendation(3, ColumnClassification.MAYBE),
+                ColumnRecommendation(3, ColumnClassification.MAYBE)
+                ]
     oracle = BaseOracle()
 
     assert len(oracle.get_recommendation(board, None)) == len(expected)
@@ -35,9 +34,9 @@ def test_no_good_options():
 
     oracle = SmartOracle()
 
-    maybe = SquareBoard.from_raw_code("....|o...|....|....")
-    bad_and_full = SquareBoard.from_raw_code("x...|oo..|o...|xoxo")
-    all_bad = SquareBoard.from_raw_code("x...|oo..|o...|....")
+    maybe = SquareBoard.from_raw_code(".....|o....|.....|.....|.....")
+    bad_and_full = SquareBoard.from_raw_code("xoxxx|ooo..|oo...|ox...|.....")
+    all_bad = SquareBoard.from_raw_code("x....|ooo..|oox..|ox...|.....")
 
     assert oracle.no_good_options(maybe, j) == False
     assert oracle.no_good_options(bad_and_full, j) == True

@@ -49,18 +49,9 @@ def test_players_are_opponents():
 
 def test_get_winner():
     m = Match(jaco, lua)
-    b1 = SquareBoard.from_list([["x", "x", "x", None],
-                                ["o", None, None, None],
-                                ["o", None, None, None],
-                                ["x", None, None, None]])
-    b2= SquareBoard.from_list([["x", "o", None, None],
-                                      ["o", None, None, None],
-                                      ["o", None, None, None],
-                                      ["o", None, None, None]])
-    b3= SquareBoard.from_list([["o", "x", "x", "o"],
-                                 ["x", "o", "o", "x"],
-                                 ["o", "x", "x", "o"],
-                                 ["x", "o", "o", "x"]])    
+    b1 = SquareBoard.from_raw_code("xo...|x....|xo...|xo...|.....")
+    b2 = SquareBoard.from_raw_code("oooo.|x....|xo...|xo...|.....")
+    b3 = SquareBoard.from_raw_code("xoxox|ooxox|oxooo|xoxxx|xoxxo") 
     
     assert m.get_winner(b1) == m.player1
     assert m.get_winner(b2) == m.player2

@@ -27,6 +27,7 @@ def test_tie():
     b.add('x')
     b.add('o')
     b.add('x')
+    b.add("o")
     assert b.is_tie("x", "o") == True
 
 def test_add_to_full():
@@ -36,7 +37,7 @@ def test_add_to_full():
     assert len(b.column) == BOARD_SIZE
 
 def test_from_list():
-    b = LinearBoard.from_list(["x", "o", None, None])
+    b = LinearBoard.from_list(["x", "o", None, None, None])
     c = LinearBoard()
     c.add("x")
     c.add("o")
@@ -44,7 +45,7 @@ def test_from_list():
     assert b == c
 
 def test_is_victory():
-    L = LinearBoard.from_list(["x", "o", "o", "o"])
+    L = LinearBoard.from_list(["x", "o", "o", "o", "o"])
 
     assert L.is_victory("o") == True
     assert L.is_victory("x") == False
