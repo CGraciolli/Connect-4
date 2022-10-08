@@ -132,5 +132,11 @@ class ReportingPlayer(Player):
         """
         tells the oracle to check its recommendations
         """
-        self.oracle.backtrack(self.moves)
+        self.oracle.backtrack(self.moves, True)
+    
+    def on_win(self):
+        """
+        tells the oracle to check its recommendations
+        """
+        self.oracle.backtrack(self.moves, False)
         
