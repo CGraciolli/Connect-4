@@ -142,10 +142,10 @@ class BoardCode:
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        return self.raw_code == other.raw_code
+        return self._raw_code == other._raw_code
     
     def __hash__(self):
-        return hash(self.raw_code)
+        return hash(self._raw_code)
 
     def __repr__(self):
         return self.raw_code
@@ -160,7 +160,7 @@ class BoardCode:
         """
         returns the boardcode reflected in the y axis
         """
-        matrix = explode_to_matrix(self._raw_code)
+        matrix = explode_to_matrix(self.raw_code)
         matrix = matrix[::-1]
         sym_raw_code = collapse_matrix(matrix)
         b = BoardCode.from_raw_code(sym_raw_code)

@@ -1,5 +1,5 @@
 import pytest
-from square_board import SquareBoard
+from square_board import SquareBoard, BoardCode
 
 def test_empty_board():
     board = SquareBoard()
@@ -86,3 +86,18 @@ def test_board_code():
     assert clone_board == b
     assert clone_board.as_code() == code
     assert clone_board.as_code()._raw_code == code._raw_code
+
+
+def test_from_raw_code():
+    b = SquareBoard.from_raw_code(".....|xo...|xo...|x....|.....")
+    c1 = BoardCode(b)
+    c2 = BoardCode.from_raw_code(".....|xo...|xo...|x....|.....")
+
+    assert c1 == c2
+
+def test_symmetric():
+    b = BoardCode.from_raw_code("xo...|x....|oo...|o....|xoxoo")
+    c = BoardCode.from_raw_code("xoxoo|o....|oo...|x....|xo...")
+
+    b1 = b.symmetric()
+    assert b1 == c

@@ -1,6 +1,5 @@
 
 from settings import BOARD_SIZE
-from square_board import BoardCode
 
 class Move:
 
@@ -12,7 +11,7 @@ class Move:
     
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            if self.position == other.position and self.board_code == other.board_code and self.rec == other.rec and self.player == other.player:
+            if self.position == other.position and self.board_code == other.board_code and self.rec == other.rec and self.player.char == other.player.char:
                 return True
             return False
         return False
