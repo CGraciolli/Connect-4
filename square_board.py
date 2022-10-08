@@ -1,7 +1,6 @@
 from linear_board import LinearBoard
 from settings import BOARD_SIZE
 from list_tools import transpose_matrix, rot_matrix_ccw, invert_matrix, collapse_matrix, explode_to_matrix
-from copy import deepcopy
 
 class SquareBoard:
     """
@@ -107,23 +106,6 @@ class SquareBoard:
     def is_victory(self, char):
         if self._vertical_victory(char) or self._horizontal_victory(char) or self._descending_victory(char) or self._rising_victory(char):
             return True
-        return False
-    
-    def is_winning_move(self, index, char):
-        temp = deepcopy(self)
-        temp.add(index, char)
-        return temp.is_victory(char)
-    
-    def is_losing_move(self, index, char):
-        if char == "x":
-            other_char = "o"
-        if char == "o":
-            other_char = "x"
-        temp = deepcopy(self)
-        temp.add(index, char)
-        for i in range(BOARD_SIZE):
-            if temp.is_winning_move(i, other_char):
-                return True
         return False
     
     def as_code(self):

@@ -58,3 +58,25 @@ def test_get_recommendation():
     assert len(o.past_rec) == 1
     for i in range(BOARD_SIZE):
         o.get_recommendation(SquareBoard.from_code(symcode), "x")[i] == rec[BOARD_SIZE -1 -i]
+    
+def test_is_winning_move():
+    b = SquareBoard.from_raw_code(".....|xo...|xo...|x....|.....")
+    c = SquareBoard.from_raw_code("x....|ooo..|o....|x....|.....")
+    o = SmartOracle()
+    assert o.is_winning_move(b, 0, "x") == True
+    assert o.is_winning_move(b, 0, "o") == False
+    assert o.is_winning_move(b, 1, "x") == False
+    assert b == SquareBoard.from_raw_code(".....|xo...|xo...|x....|.....")
+    assert o.is_winning_move(c, 1, "o")
+
+def test_is_losing_move():
+    b = SquareBoard.from_raw_code("xxx..|xo...|ooo..|x....|.....")
+    o = SmartOracle()
+
+    assert o.is_losing_move(b, 0, "o") == False
+    assert o.is_losing_move(b, 1, "o") == True
+    assert o.is_losing_move(b, 2, "o") == True
+    assert o.is_losing_move(b, 3, "o") == True
+    assert o.is_losing_move(b, 4, "o") == True
+    assert o.is_losing_move(b, 2, "x") == False
+    assert b == SquareBoard.from_raw_code("xxx..|xo...|ooo..|x....|.....")

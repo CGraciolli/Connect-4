@@ -57,26 +57,6 @@ def test_diag_asc_victoryy():
     assert diagonal2._rising_victory('x') == True
     assert diagonal2._rising_victory('o') == False
 
-def test_is_winning_move():
-    b = SquareBoard.from_raw_code(".....|xo...|xo...|x....|.....")
-    c = SquareBoard.from_raw_code("x....|ooo..|o....|x....|.....")
-
-    assert b.is_winning_move(0, "x") == True
-    assert b.is_winning_move(0, "o") == False
-    assert b.is_winning_move(1, "x") == False
-    assert b == SquareBoard.from_raw_code(".....|xo...|xo...|x....|.....")
-    assert c.is_winning_move(1, "o")
-
-def test_is_losing_move():
-    b = SquareBoard.from_raw_code("xxx..|xo...|ooo..|x....|.....")
-    
-    assert b.is_losing_move(0, "o") == False
-    assert b.is_losing_move(1, "o") == True
-    assert b.is_losing_move(2, "o") == True
-    assert b.is_losing_move(3, "o") == True
-    assert b.is_losing_move(4, "o") == True
-    assert b.is_losing_move(2, "x") == False
-    assert b == SquareBoard.from_raw_code("xxx..|xo...|ooo..|x....|.....")
 
 def test_board_code():
     b = SquareBoard.from_raw_code(".....|xo...|xo...|x....|.....")

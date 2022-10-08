@@ -2,6 +2,7 @@ from enum import Enum
 from square_board import SquareBoard
 from settings import BOARD_SIZE
 from beautifultable import BeautifulTable
+from copy import deepcopy
 
 ##Enum: Base class for creating enumerated constants
 ##auto: Instances are replaced with an appropriate value for Enum members. By default, the initial value starts at 1.
@@ -77,6 +78,12 @@ class BaseOracle:
     def make_key(self, board_code, char):
         pass
 
+    def is_winning_move(self, board, index, char):
+        pass
+
+    def is_losing_move(self, board, index, char):
+        pass
+
 class SmartOracle(BaseOracle):
     
     def get_column_recommendation(self, board, index, char):
@@ -87,9 +94,9 @@ class SmartOracle(BaseOracle):
         if column.is_full():
             return ColumnRecommendation(index, ColumnClassification.FULL)
         else:
-            if board.is_winning_move(index, char):
+            if self.is_winning_move(board, index, char):
                 return ColumnRecommendation(index, ColumnClassification.WIN)
-            elif board.is_losing_move(index, char):
+            elif self.is_losing_move(board, index, char):
                 return ColumnRecommendation(index, ColumnClassification.REALLY_BAD)
             else:
                 return ColumnRecommendation(index, ColumnClassification.MAYBE)
@@ -99,6 +106,23 @@ class SmartOracle(BaseOracle):
         rec = self.get_recommendation(board, player.char)
         rec = list(filter(lambda x : x.classification == ColumnClassification.MAYBE or x.classification == ColumnClassification.WIN, rec))
         return rec == []
+    
+    def is_winning_move(self, board, index, char):
+        temp = deepcopy(board)
+        temp.add(index, char)
+        return temp.is_victory(char)
+    
+    def is_losing_move(self, board, index, char):
+        if char == "x":
+            other_char = "o"
+        if char == "o":
+            other_char = "x"
+        temp = deepcopy(board)
+        temp.add(index, char)
+        for i in range(BOARD_SIZE):
+            if self.is_winning_move(temp, i, other_char):
+                return True
+        return False
 
 class MemoizingOracle(SmartOracle):
     """
