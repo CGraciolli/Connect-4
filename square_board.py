@@ -149,3 +149,19 @@ class BoardCode:
 
     def __repr__(self):
         return self.raw_code
+    
+    @classmethod
+    def from_raw_code(cls, raw_code):
+        code = cls(SquareBoard())
+        code._raw_code = raw_code
+        return code
+
+    def symmetric(self):
+        """
+        returns the boardcode reflected in the y axis
+        """
+        matrix = explode_to_matrix(self._raw_code)
+        matrix = matrix[::-1]
+        sym_raw_code = collapse_matrix(matrix)
+        b = BoardCode.from_raw_code(sym_raw_code)
+        return b
