@@ -11,6 +11,7 @@ class ColumnClassification(Enum):
     REALLY_BAD = -10
     BAD = 1
     MAYBE = 10
+    GOOD = 20
     WIN = 100
 
 class ColumnRecommendation:
@@ -50,7 +51,7 @@ class BaseOracle:
             return ColumnRecommendation(index, ColumnClassification.FULL)
         return ColumnRecommendation(index, ColumnClassification.MAYBE)
     
-    def backtrack(self, list_of_moves):
+    def backtrack(self, list_of_moves, lost):
         pass
 
     def update_to_bad(self, move):
@@ -84,6 +85,12 @@ class BaseOracle:
     def is_losing_move(self, board, index, char):
         pass
 
+    def only_good_options(self, board, player):
+        pass
+
+    def update_to_good(self, move):
+        pass
+
 class SmartOracle(BaseOracle):
     
     def get_column_recommendation(self, board, index, char):
@@ -104,7 +111,12 @@ class SmartOracle(BaseOracle):
     
     def no_good_options(self, board, player):
         rec = self.get_recommendation(board, player.char)
-        rec = list(filter(lambda x : x.classification == ColumnClassification.MAYBE or x.classification == ColumnClassification.WIN, rec))
+        rec = list(filter(lambda x : x.classification == ColumnClassification.MAYBE or x.classification == ColumnClassification.WIN or x.classification == ColumnClassification.GOOD, rec))
+        return rec == []
+    
+    def only_good_options(self, board, player):
+        rec = self.get_recommendation(board, player.char)
+        rec = list(filter(lambda x : x.classification == ColumnClassification.FULL or x.classification == ColumnClassification.REALLY_BAD or x.classification == ColumnClassification.BAD, rec))
         return rec == []
     
     def is_winning_move(self, board, index, char):
@@ -134,6 +146,7 @@ class MemoizingOracle(SmartOracle):
         self.past_rec = {}
 
     def get_recommendation(self, board, char):
+        ##needs to check the same board with opposite pieces (both times)
         key = self.make_key(board.as_code(), char)
         keys = self.make_key(board.as_code().symmetric(), char)
         if key not in self.past_rec and keys not in self.past_rec:
@@ -167,6 +180,16 @@ class LearningOracle(MemoizingOracle):
         rec[move.position] = ColumnRecommendation(move.position, ColumnClassification.BAD)
         self.past_rec[key] = rec
     
+    def update_to_good(self, move):
+        ##create key
+        key = self.make_key(move.board_code, move.player.char)
+        ##get wrong classification
+        board = SquareBoard.from_code(move.board_code)
+        rec = self.get_recommendation(board, move.player.char)
+        ##correct it
+        rec[move.position] = ColumnRecommendation(move.position, ColumnClassification.GOOD)
+        self.past_rec[key] = rec
+
     def backtrack(self, list_of_moves, lost):
         """
         reexamines all moves
@@ -183,5 +206,9 @@ class LearningOracle(MemoizingOracle):
                     break
         else:
             for move in list_of_moves:
-                pass
+                self.update_to_bad(move)
+                board = SquareBoard.from_code(move.board_code)
+                if not self.only_good_options(board, move.player):
+                    break
+
         print("Size of knowledge base: ", len(self.past_rec))

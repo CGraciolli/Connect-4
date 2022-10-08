@@ -111,6 +111,14 @@ class SquareBoard:
     def as_code(self):
         return BoardCode(self)
     
+    def swapped_board(self):
+        """
+        swaps x and o in the board
+        """
+        code = BoardCode(self)
+        code = code.swapped_code()
+        return SquareBoard.from_code(code)
+    
 
 class BoardCode:
     
@@ -147,3 +155,10 @@ class BoardCode:
         sym_raw_code = collapse_matrix(matrix)
         b = BoardCode.from_raw_code(sym_raw_code)
         return b
+    
+    def swapped_code(self):
+        raw_code = self._raw_code
+        raw_code = raw_code.replace("x", "c")
+        raw_code = raw_code.replace("o", "x")
+        raw_code = raw_code.replace("c", "o")
+        return BoardCode.from_raw_code(raw_code)
