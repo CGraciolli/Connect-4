@@ -3,6 +3,7 @@ from oracle import *
 from square_board import SquareBoard, BoardCode
 from player import Player
 from move import Move
+from settings import BOARD_SIZE
 
 def test_base_oracle():
     board = SquareBoard.from_raw_code("xoxox|.....|.....|.....|x....") 
@@ -41,3 +42,19 @@ def test_no_good_options():
     assert oracle.no_good_options(maybe, j) == False
     assert oracle.no_good_options(bad_and_full, j) == True
     assert oracle.no_good_options(all_bad, j) == True
+
+def test_get_recommendation():
+    o = MemoizingOracle()
+    code = BoardCode.from_raw_code(".....|ooo..|.....|.....|xxx..")
+    key = o.make_key(code, "x")
+    board = SquareBoard.from_code(code)
+    rec = o.get_recommendation(board, "x")
+    o.past_rec = {key : rec}
+
+    symcode = code.symmetric()
+
+    o.get_recommendation(SquareBoard.from_code(symcode), "x")
+
+    assert len(o.past_rec) == 1
+    for i in range(BOARD_SIZE):
+        o.get_recommendation(SquareBoard.from_code(symcode), "x")[i] == rec[BOARD_SIZE -1 -i]

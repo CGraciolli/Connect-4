@@ -34,9 +34,9 @@ class BaseOracle:
     recives a square board
     for each column, determines if it is full or not
     """
-    def get_recommendation(self, board, char):
+    def get_recommendation(self, board, char): ##should recive board_code in the future
         recommendations = []
-        for i in range(len(board.columns)):
+        for i in range(BOARD_SIZE):
             recommendations.append(self.get_column_recommendation(board, i, char))
         return recommendations
 
@@ -111,9 +111,19 @@ class MemoizingOracle(SmartOracle):
 
     def get_recommendation(self, board, char):
         key = self.make_key(board.as_code(), char)
-        if key not in self.past_rec:
+        keys = self.make_key(board.as_code().symmetric(), char)
+        if key not in self.past_rec and keys not in self.past_rec:
             self.past_rec[key] = super().get_recommendation(board, char)
-        return self.past_rec[key]
+        if key in self.past_rec:
+            return self.past_rec[key]
+        else:
+            recs = self.past_rec[keys]
+            rec = []
+            for i in range(BOARD_SIZE):
+                classification = recs[BOARD_SIZE -1 -i].classification
+                rec.append(ColumnRecommendation(i, classification))
+            return rec
+
     
     def make_key(self, board_code, char):
         key = board_code.raw_code + char
