@@ -46,18 +46,22 @@ def test_no_good_options():
 def test_get_recommendation():
     o = MemoizingOracle()
     code = BoardCode.from_raw_code(".....|ooo..|.....|.....|xxx..")
+    swapped_code = BoardCode.from_raw_code(".....|xxx..|.....|.....|ooo..")
+    swap_sym_code = swapped_code.symmetric()
     key = o.make_key(code, "x")
     board = SquareBoard.from_code(code)
     rec = o.get_recommendation(board, "x")
-    o.past_rec = {key : rec}
+    o.knowledge.past_rec = {key : rec}
 
     symcode = code.symmetric()
 
     o.get_recommendation(SquareBoard.from_code(symcode), "x")
 
-    assert len(o.past_rec) == 1
+    assert len(o.knowledge) == 1
     for i in range(BOARD_SIZE):
         o.get_recommendation(SquareBoard.from_code(symcode), "x")[i] == rec[BOARD_SIZE -1 -i]
+        o.get_recommendation(SquareBoard.from_code(code), "x")[i] == o.get_recommendation(SquareBoard.from_code(swapped_code), "o")[i]
+        o.get_recommendation(SquareBoard.from_code(swap_sym_code), "o")[i] == rec[BOARD_SIZE -1 -i]
     
 def test_is_winning_move():
     b = SquareBoard.from_raw_code(".....|xo...|xo...|x....|.....")

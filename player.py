@@ -1,5 +1,4 @@
-from oracle import MemoizingOracle
-from oracle import BaseOracle, ColumnClassification
+from oracle import BaseOracle, ColumnClassification, MemoizingOracle
 from settings import BOARD_SIZE, DEBUG
 from random import choice
 from move import Move

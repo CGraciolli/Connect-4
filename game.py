@@ -16,6 +16,7 @@ class DifficultyLevel(Enum):
     EASY = auto()
     MEDIUM = auto()
     HARD = auto()
+    VERY_HARD = auto()
 
 class Game:
     
@@ -54,16 +55,18 @@ class Game:
             self.round_type = RoundType.COMPUTER_VS_HUMAN
 
     def get_difficulty_level(self):
-        print("Select difficulty level:\n1.Easy\n2.Medium\n3.Hard")
+        print("Select difficulty level:\n1.Easy\n2.Medium\n3.Hard\n4.Very Hard")
         resposta = 0
-        while resposta != 1 and resposta != 2 and resposta != 3:
-            resposta = int(input("Please type 1, 2 or 3: "))
+        while resposta != 1 and resposta != 2 and resposta != 3 and resposta != 4:
+            resposta = int(input("Please type 1, 2, 3 or 4: "))
         if resposta == 1:
             self.difficulty_level = DifficultyLevel.EASY
-        if resposta == 2:
+        elif resposta == 2:
             self.difficulty_level = DifficultyLevel.MEDIUM
-        if resposta == 3:
+        elif resposta == 3:
             self.difficulty_level = DifficultyLevel.HARD
+        elif resposta == 4:
+            self.difficulty_level = DifficultyLevel.VERY_HARD
 
     def make_match(self):
         if self.difficulty_level == DifficultyLevel.EASY:
@@ -72,6 +75,9 @@ class Game:
             player1 = ReportingPlayer("Jaco", oracle = MemoizingOracle())
         elif self.difficulty_level == DifficultyLevel.HARD:
             player1 = ReportingPlayer("Jaco", oracle = LearningOracle())
+        elif self.difficulty_level == DifficultyLevel.VERY_HARD:
+            player1 = ReportingPlayer("Jaco", oracle = LearningOracle())
+            get_base_knowledge(20, player1, ReportingPlayer("Lua", oracle = LearningOracle()))
         if self.round_type == RoundType.COMPUTER_VS_COMPUTER:
             player2 = ReportingPlayer("Lua", oracle = LearningOracle())
             player1 = ReportingPlayer("Jaco", oracle = LearningOracle())
@@ -128,3 +134,14 @@ class Game:
             print(winner.name, "won!")
         else:
             print("The match ended in a tie.")
+
+def get_base_knowledge(n, player1, player2):
+    """
+    recives two players
+    creates n matches between them
+    merges their knowledges into player 1´s oracle"""
+    Match(player1, player2)
+    for _ in range(n):
+        Match(player1, player2)
+    base_knowledge = player1.oracle.knowledge.merge(player2.oracle.knowledge)
+    return base_knowledge

@@ -1,8 +1,10 @@
+from match import Match
 from enum import Enum
 from square_board import SquareBoard
 from settings import BOARD_SIZE
 from beautifultable import BeautifulTable
 from copy import deepcopy
+from knowledge import Knowledge
 
 ##Enum: Base class for creating enumerated constants
 ##auto: Instances are replaced with an appropriate value for Enum members. By default, the initial value starts at 1.
@@ -71,12 +73,17 @@ class BaseOracle:
                 table.columns.append(["win"], header=str(index))
             elif r == ColumnClassification.REALLY_BAD:
                 table.columns.append(["lose"], header=str(index))
+            elif r == ColumnClassification.GOOD:
+                table.columns.append(["good"], header=str(index))
         print(table)
 
     def no_good_options(self, board, player):
         pass
 
     def make_key(self, board_code, char):
+        pass
+
+    def make_swapped_key(self, board_code, char):
         pass
 
     def is_winning_move(self, board, index, char):
@@ -143,18 +150,29 @@ class MemoizingOracle(SmartOracle):
 
     def __init__(self):
         super().__init__
-        self.past_rec = {}
+        self.knowledge = Knowledge()
 
     def get_recommendation(self, board, char):
         ##needs to check the same board with opposite pieces (both times)
         key = self.make_key(board.as_code(), char)
-        keys = self.make_key(board.as_code().symmetric(), char)
-        if key not in self.past_rec and keys not in self.past_rec:
-            self.past_rec[key] = super().get_recommendation(board, char)
-        if key in self.past_rec:
-            return self.past_rec[key]
-        else:
-            recs = self.past_rec[keys]
+        swapkey = self.make_swapped_key(board.as_code(), char)
+        symkey = self.make_key(board.as_code().symmetric(), char)
+        swapsymkey =  self.make_swapped_key(board.as_code().symmetric(), char)
+        if key not in self.knowledge.past_rec and symkey not in self.knowledge.past_rec and swapkey not in self.knowledge.past_rec and swapsymkey not in self.knowledge.past_rec:
+            self.knowledge.past_rec[key] = super().get_recommendation(board, char)
+        if key in self.knowledge.past_rec:
+            return self.knowledge.past_rec[key]
+        elif symkey in self.knowledge.past_rec:
+            recs = self.knowledge.past_rec[symkey]
+            rec = []
+            for i in range(BOARD_SIZE):
+                classification = recs[BOARD_SIZE -1 -i].classification
+                rec.append(ColumnRecommendation(i, classification))
+            return rec
+        elif swapkey in self.knowledge.past_rec:
+            return self.knowledge.past_rec[swapkey]
+        elif swapsymkey in self.knowledge.past_rec:
+            recs = self.knowledge.past_rec[swapsymkey]
             rec = []
             for i in range(BOARD_SIZE):
                 classification = recs[BOARD_SIZE -1 -i].classification
@@ -166,7 +184,14 @@ class MemoizingOracle(SmartOracle):
         key = board_code.raw_code + char
         return key
     
-    
+    def make_swapped_key(self, board_code, char):
+        board_code = board_code.swapped_code()
+        if char == "x":
+            key = self.make_key(board_code, "o")
+        elif char == "o":
+            key = self.make_key(board_code, "x")
+        return key
+            
 
 class LearningOracle(MemoizingOracle):
     
@@ -178,7 +203,7 @@ class LearningOracle(MemoizingOracle):
         rec = self.get_recommendation(board, move.player.char)
         ##correct it
         rec[move.position] = ColumnRecommendation(move.position, ColumnClassification.BAD)
-        self.past_rec[key] = rec
+        self.knowledge.past_rec[key] = rec
     
     def update_to_good(self, move):
         ##create key
@@ -188,7 +213,7 @@ class LearningOracle(MemoizingOracle):
         rec = self.get_recommendation(board, move.player.char)
         ##correct it
         rec[move.position] = ColumnRecommendation(move.position, ColumnClassification.GOOD)
-        self.past_rec[key] = rec
+        self.knowledge.past_rec[key] = rec
 
     def backtrack(self, list_of_moves, lost):
         """
@@ -211,4 +236,9 @@ class LearningOracle(MemoizingOracle):
                 if not self.only_good_options(board, move.player):
                     break
 
-        print("Size of knowledge base: ", len(self.past_rec))
+        print("Size of knowledge base: ", len(self.knowledge))
+
+
+
+    
+

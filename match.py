@@ -2,7 +2,7 @@
 
 class Match():
     
-    def __init__(self, player1, player2):
+    def __init__(self, player1=None, player2=None):
         self.player1 = player1
         self.player2 = player2
         self.player1.char = "x"
@@ -35,3 +35,5 @@ class Match():
             return True
         else:
             return False
+
+   
