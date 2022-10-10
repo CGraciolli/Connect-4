@@ -32,7 +32,7 @@ class Game:
         ##match's configuration
         self.configurated_by_user()
         ##starts game loop
-        self.start_game_loop()
+        self.start_game_loop(False, 0)
     
     def print_logo(self):
         logo = Figlet(font = "stop", )
@@ -77,7 +77,7 @@ class Game:
             player1 = ReportingPlayer("Jaco", oracle = LearningOracle())
         elif self.difficulty_level == DifficultyLevel.VERY_HARD:
             player1 = ReportingPlayer("Jaco", oracle = LearningOracle())
-            get_base_knowledge(20, player1, ReportingPlayer("Lua", oracle = LearningOracle()))
+            self.get_base_knowledge(20, player1, ReportingPlayer("Lua", oracle = LearningOracle()))
         if self.round_type == RoundType.COMPUTER_VS_COMPUTER:
             player2 = ReportingPlayer("Lua", oracle = LearningOracle())
             player1 = ReportingPlayer("Jaco", oracle = LearningOracle())
@@ -85,27 +85,44 @@ class Game:
             player2 = HumanPlayer(input("Enter your name: "))
         return Match(player1, player2)
     
-    def start_game_loop(self):
+    def start_game_loop(self, training, n):
         go_on = True
+        counter = 0
         while go_on:
             ##gets player who goes next
             current_player = self.match.next_player
             ##they play
             current_player.play(self.board)
-            ##shows move
-            self.display_move(current_player)
-            ##prints board
-            self.display_board()
+            if not training:
+                ##shows move
+                self.display_move(current_player)
+                ##prints board
+                self.display_board()
             ##checks if the match is over
             if self.has_winner_or_is_a_tie():
-                self.display_result()
-                is_it_over = self.match.is_match_over()
+                if not training:
+                    self.display_result()                
+                    is_it_over = self.match.is_match_over()
+                else:
+                    counter += 1
+                    is_it_over = (counter >= n)
                 if not is_it_over:
                     self.board = SquareBoard()
-                    self.display_board()
+                    if not training:
+                        self.display_board()
                 else:
                     go_on = False
     
+    def get_base_knowledge(self, n, player1, player2):
+        """
+        recives two players
+        creates n matches between them
+        merges their knowledges into player 1´s oracle"""
+        Match(player1, player2)
+        self.start_game_loop(True, n)
+        base_knowledge = player1.oracle.knowledge.merge(player2.oracle.knowledge)
+        return base_knowledge
+
     def display_move(self, player):
         print(player.name, "placed a piece in column", player.moves[0].position)
 
@@ -135,13 +152,3 @@ class Game:
         else:
             print("The match ended in a tie.")
 
-def get_base_knowledge(n, player1, player2):
-    """
-    recives two players
-    creates n matches between them
-    merges their knowledges into player 1´s oracle"""
-    Match(player1, player2)
-    for _ in range(n):
-        Match(player1, player2)
-    base_knowledge = player1.oracle.knowledge.merge(player2.oracle.knowledge)
-    return base_knowledge

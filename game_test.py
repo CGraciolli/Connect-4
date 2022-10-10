@@ -1,5 +1,5 @@
 import pytest
-from game import Game, get_base_knowledge
+from game import Game
 from square_board import SquareBoard
 from player import ReportingPlayer
 from oracle import LearningOracle
@@ -29,9 +29,10 @@ def test_is_game_over():
     assert g4.has_winner_or_is_a_tie() == True
 
 def test_get_base_knowledge():
+    game = Game()
     p1 = ReportingPlayer("Jaco", oracle = LearningOracle())
     p2 = ReportingPlayer("Lua", oracle = LearningOracle())
-    get_base_knowledge(20, p1, p2)
+    game.get_base_knowledge(20, p1, p2)
 
     assert p1.oracle.knowledge.past_rec != {}
     assert len(p1.oracle.knowledge) >= len(p2.oracle.knowledge)
