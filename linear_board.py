@@ -1,3 +1,4 @@
+from types import ClassMethodDescriptorType
 from settings import BOARD_SIZE, VICTORY_STRIKE
 from list_tools import find_n_cons
 
@@ -6,6 +7,13 @@ class LinearBoard:
     represents a board with a single column
     x for player 1, o for player 2, None for empty space
     """
+
+    @classmethod
+    def fromList(cls, list):
+        board = cls()
+        board.column = list
+        return list
+        
     def __init__(self):
         """
         creates an empty linear board
@@ -25,7 +33,7 @@ class LinearBoard:
         return self.column[key]
     
     def __repr__(self):
-        return str(self.column)
+        return f'Linear Board: {self.column}'
 
 
     @classmethod
