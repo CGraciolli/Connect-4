@@ -47,25 +47,25 @@ class Game:
     def get_round_type(self):
         print("Select round type:\n1.Computer vs computer\n2.Computer vs human")
         resposta = 0
-        while resposta != 1 and resposta != 2:
-            resposta = int(input("Please type 1 or 2: "))
-        if resposta == 1:
+        while resposta != "1" and resposta != "2":
+            resposta = input("Please type 1 or 2: ")
+        if resposta == "1":
             self.round_type = RoundType.COMPUTER_VS_COMPUTER
-        if resposta == 2:
+        if resposta == "2":
             self.round_type = RoundType.COMPUTER_VS_HUMAN
 
     def get_difficulty_level(self):
         print("Select difficulty level:\n1.Easy\n2.Medium\n3.Hard\n4.Very Hard")
         resposta = 0
-        while resposta != 1 and resposta != 2 and resposta != 3 and resposta != 4:
-            resposta = int(input("Please type 1, 2, 3 or 4: "))
-        if resposta == 1:
+        while resposta != "1" and resposta != "2" and resposta != "3" and resposta != "4":
+            resposta = input("Please type 1, 2, 3 or 4: ")
+        if resposta == "1":
             self.difficulty_level = DifficultyLevel.EASY
-        elif resposta == 2:
+        elif resposta == "2":
             self.difficulty_level = DifficultyLevel.MEDIUM
-        elif resposta == 3:
+        elif resposta == "3":
             self.difficulty_level = DifficultyLevel.HARD
-        elif resposta == 4:
+        elif resposta == "4":
             self.difficulty_level = DifficultyLevel.VERY_HARD
 
     def make_match(self):
