@@ -203,15 +203,14 @@ class LearningOracle(MemoizingOracle):
         rec[move.position] = ColumnRecommendation(move.position, ColumnClassification.GOOD)
         self.knowledge.past_rec[key] = rec
 
-    def backtrack(self, list_of_moves, lost, training_match=False):
+    def backtrack(self, list_of_moves, lost):
         """
         reexamines all moves
         if it finds one where all is lost,
         the one beore that is updates to bad
         lost is a boolean that lets us know if we lost
         """
-        if not training_match:
-            print("Learning...")
+        print("Learning...")
         if lost:
             for move in list_of_moves:
                 self.update_to_bad(move)
@@ -224,8 +223,7 @@ class LearningOracle(MemoizingOracle):
                 board = SquareBoard.from_code(move.board_code)
                 if not self.only_good_options(board, move.player):
                     break
-        if not training_match:
-            print("Size of knowledge base: ", len(self.knowledge))
+        print("Size of knowledge base: ", len(self.knowledge))
 
 
 

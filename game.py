@@ -143,8 +143,8 @@ class Game:
         if self.board.is_victory("x") or self.board.is_victory("o") or self.board.is_tie("x", "o"):
             winner = self.match.get_winner(self.board)
             if winner != None:
-                winner.on_win(training)
-                winner.opponent.on_lose(training)
+                winner.on_win()
+                winner.opponent.on_lose()
             return True
         return False
 

@@ -1,4 +1,4 @@
 VICTORY_STRIKE = 4
 BOARD_SIZE = 5
-DEBUG = False
+DEBUG = True
 
