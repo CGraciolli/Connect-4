@@ -155,10 +155,3 @@ class BoardCode:
         sym_raw_code = collapse_matrix(matrix)
         b = BoardCode.from_raw_code(sym_raw_code)
         return b
-    
-    def swapped_code(self):
-        raw_code = self._raw_code
-        raw_code = raw_code.replace("x", "c")
-        raw_code = raw_code.replace("o", "x")
-        raw_code = raw_code.replace("c", "o")
-        return BoardCode.from_raw_code(raw_code)

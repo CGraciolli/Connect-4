@@ -30,12 +30,11 @@ def test_is_game_over():
 
 def test_get_base_knowledge():
     game = Game()
-    p1 = ReportingPlayer("Jaco", oracle = LearningOracle())
-    p2 = ReportingPlayer("Lua", oracle = LearningOracle())
-    game.get_base_knowledge(20, p1, p2)
+    p1 = ReportingPlayer("Jaco")
+    p2 = ReportingPlayer("Lua")
+    knowledge = game.get_base_knowledge(20)
 
-    assert p1.oracle.knowledge.past_rec != {}
-    assert len(p1.oracle.knowledge) >= len(p2.oracle.knowledge)
+    assert knowledge.past_rec != {}
 
 
 

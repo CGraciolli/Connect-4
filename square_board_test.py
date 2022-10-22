@@ -82,15 +82,3 @@ def test_symmetric():
     b1 = b.symmetric()
     assert b1 == c
 
-def test_swapped_board():
-    b = SquareBoard.from_raw_code("xo...|x....|oo...|o....|xoxoo")
-    c = SquareBoard.from_raw_code("ox...|o....|xx...|x....|oxoxx")
-    code1 = BoardCode.from_raw_code("xo...|x....|oo...|o....|xoxoo")
-    code2 = BoardCode.from_raw_code("ox...|o....|xx...|x....|oxoxx")
-    empty = SquareBoard()
-
-    assert code1.swapped_code() == code2
-    assert code2.swapped_code() == code1
-    assert b.swapped_board() == c
-    assert c.swapped_board() == b
-    assert empty.swapped_board() == empty

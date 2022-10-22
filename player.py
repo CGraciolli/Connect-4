@@ -129,15 +129,15 @@ class ReportingPlayer(Player):
     def __init__(self, name, char = None, oracle = LearningOracle(), opponent = None):
         super().__init__(name, char, oracle, opponent)
 
-    def on_lose(self):
+    def on_lose(self, training=False):
         """
         tells the oracle to check its recommendations
         """
-        self.oracle.backtrack(self.moves, True)
+        self.oracle.backtrack(self.moves, True, training_match=training)
     
-    def on_win(self):
+    def on_win(self, training=False):
         """
         tells the oracle to check its recommendations
         """
-        self.oracle.backtrack(self.moves, False)
+        self.oracle.backtrack(self.moves, False, training_match=training)
         

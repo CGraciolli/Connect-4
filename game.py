@@ -101,7 +101,7 @@ class Game:
                 ##prints board
                 self.display_board()
             ##checks if the match is over
-            if self.has_winner_or_is_a_tie():
+            if self.has_winner_or_is_a_tie(training):
                 if not training:
                     self.display_result()                
                     is_it_over = self.match.is_match_over()
@@ -123,6 +123,7 @@ class Game:
         """
         Match(ReportingPlayer("Jaco"), ReportingPlayer("Lua"))
         knowledge = self.start_game_loop(True, n)
+        self.board = SquareBoard()
         return knowledge 
 
     def display_move(self, player):
@@ -138,12 +139,12 @@ class Game:
         print(bt)
 
     
-    def has_winner_or_is_a_tie(self):
+    def has_winner_or_is_a_tie(self, training):
         if self.board.is_victory("x") or self.board.is_victory("o") or self.board.is_tie("x", "o"):
             winner = self.match.get_winner(self.board)
             if winner != None:
-                winner.on_win()
-                winner.opponent.on_lose()
+                winner.on_win(training)
+                winner.opponent.on_lose(training)
             return True
         return False
 
