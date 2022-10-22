@@ -1,12 +1,14 @@
 from pyfiglet import Figlet
 from enum import Enum, auto
+
+from urllib3 import Retry
 from match import Match
 from player import HumanPlayer, ReportingPlayer, Player
 from square_board import SquareBoard
 from list_tools import invert_matrix
 from beautifultable import BeautifulTable
 from settings import BOARD_SIZE
-from oracle import MemoizingOracle, LearningOracle
+from oracle import SmartOracle, LearningOracle
 
 class RoundType(Enum):
     COMPUTER_VS_COMPUTER = auto()
@@ -72,15 +74,15 @@ class Game:
         if self.difficulty_level == DifficultyLevel.EASY:
             player1 = Player("Jaco")
         elif self.difficulty_level == DifficultyLevel.MEDIUM:
-            player1 = ReportingPlayer("Jaco", oracle = MemoizingOracle())
+            player1 = Player("Jaco", oracle = SmartOracle())
         elif self.difficulty_level == DifficultyLevel.HARD:
-            player1 = ReportingPlayer("Jaco", oracle = LearningOracle())
+            player1 = ReportingPlayer("Jaco")
         elif self.difficulty_level == DifficultyLevel.VERY_HARD:
-            player1 = ReportingPlayer("Jaco", oracle = LearningOracle())
-            self.get_base_knowledge(20, player1, ReportingPlayer("Lua", oracle = LearningOracle()))
+            k = self.get_base_knowledge(20)
+            player1 = ReportingPlayer("Jaco", oracle = LearningOracle(k))
         if self.round_type == RoundType.COMPUTER_VS_COMPUTER:
-            player2 = ReportingPlayer("Lua", oracle = LearningOracle())
-            player1 = ReportingPlayer("Jaco", oracle = LearningOracle())
+            player2 = ReportingPlayer("Lua")
+            player1 = ReportingPlayer("Jaco")
         if self.round_type == RoundType.COMPUTER_VS_HUMAN:
             player2 = HumanPlayer(input("Enter your name: "))
         return Match(player1, player2)
@@ -110,18 +112,18 @@ class Game:
                     self.board = SquareBoard()
                     if not training:
                         self.display_board()
-                else:
-                    go_on = False
+                else: ##if we are here, we are in a training match and it has ended
+                    return current_player.oracle.knowledge
+
     
-    def get_base_knowledge(self, n, player1, player2):
+    def get_base_knowledge(self, n):
         """
-        recives two players
-        creates n matches between them
-        merges their knowledges into player 1´s oracle"""
-        Match(player1, player2)
-        self.start_game_loop(True, n)
-        base_knowledge = player1.oracle.knowledge.merge(player2.oracle.knowledge)
-        return base_knowledge
+        creates n matches
+        returns the knowledge acquired in these matches
+        """
+        Match(ReportingPlayer("Jaco"), ReportingPlayer("Lua"))
+        knowledge = self.start_game_loop(True, n)
+        return knowledge 
 
     def display_move(self, player):
         print(player.name, "placed a piece in column", player.moves[0].position)

@@ -1,4 +1,3 @@
-from match import Match
 from enum import Enum
 from square_board import SquareBoard
 from settings import BOARD_SIZE
@@ -38,6 +37,10 @@ class BaseOracle:
     recives a square board
     for each column, determines if it is full or not
     """
+
+    def __init__(self, knowledge=Knowledge()):
+        self.knowledge = knowledge
+
     def get_recommendation(self, board, char): ##should recive board_code in the future
         recommendations = []
         for i in range(BOARD_SIZE):
@@ -147,10 +150,6 @@ class MemoizingOracle(SmartOracle):
     """
     get_recommendation is memoized
     """
-
-    def __init__(self):
-        super().__init__
-        self.knowledge = Knowledge()
 
     def get_recommendation(self, board, char):
         ##needs to check the same board with opposite pieces (both times)

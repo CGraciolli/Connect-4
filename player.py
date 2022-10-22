@@ -1,4 +1,4 @@
-from oracle import BaseOracle, ColumnClassification, MemoizingOracle
+from oracle import BaseOracle, ColumnClassification, MemoizingOracle, LearningOracle
 from settings import BOARD_SIZE, DEBUG
 from random import choice
 from move import Move
@@ -126,6 +126,8 @@ class HumanPlayer(Player):
                     return answer
 
 class ReportingPlayer(Player):
+    def __init__(self, name, char = None, oracle = LearningOracle(), opponent = None):
+        super().__init__(name, char, oracle, opponent)
 
     def on_lose(self):
         """

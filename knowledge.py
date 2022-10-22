@@ -12,9 +12,3 @@ class Knowledge:
     def __len__(self):
         return len(self.past_rec.keys())
     
-    def merge(self, other):
-        """
-        recives two knowledge instances and merges the second dictionary into the first
-        (maybe could be make more efficiently by comparing swapped and swapped and inversed)
-        """
-        self.past_rec.update(other.past_rec)
