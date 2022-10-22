@@ -12,5 +12,6 @@ This project comes from a online course from KeepCoding (Curso Resolución de Pr
 What I did by myself:
 1. Implemented the possibility of the computer learning prior to starting the game.
 2. The function get_help
-3. The hability to learn by looking at symmetric moves on the board
-4. The class Knowledge (it was an attribute of oracle before)
+3.The ability to learn after winning (the computer only learnt when losing before)
+4. The ability to learn by looking at symmetric moves on the board
+5. The class Knowledge (it was an attribute of oracle before)
