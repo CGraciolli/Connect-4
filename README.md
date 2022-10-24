@@ -5,7 +5,7 @@ There are 4 difficulties:
 1. In easy, the computer plays randomly.
 2. In medium, the computer recognizes moves that will win or lose immediatly.
 3. In hard, the computer learns with each match.
-4. In very hard, the computer starts with a bse knowledge acquired by playing aginst itself and continues to learn during the matches against the human.
+4. In very hard, the computer starts with a base knowledge acquired by playing against itself and continues to learn during the matches against the human.
 
 This project comes from a online course from KeepCoding (Curso Resolución de Problemas con OOP y TDD - Introducción IA y Machine Learning)
 
