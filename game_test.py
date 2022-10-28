@@ -2,7 +2,6 @@ import pytest
 from game import Game
 from square_board import SquareBoard
 from player import ReportingPlayer
-from oracle import LearningOracle
 
 
 def test_creation():
